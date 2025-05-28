@@ -15,7 +15,6 @@ interface OptionButtonProps {
 export default function OptionButton({ 
   option, 
   isSelected, 
-  questionType, 
   onSelect, 
   index 
 }: OptionButtonProps) {
