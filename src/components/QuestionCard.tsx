@@ -15,9 +15,7 @@ interface QuestionCardProps {
 export default function QuestionCard({ 
   question, 
   onAnswer, 
-  currentAnswer, 
-  questionNumber = 1, 
-  totalQuestions = 10 
+  currentAnswer
 }: QuestionCardProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([])
   const [isVisible, setIsVisible] = useState(false)
