@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Settings } from 'lucide-react'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -11,6 +11,19 @@ export default function Home() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-bounce"></div>
         <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-bounce animation-delay-2000"></div>
+      </div>
+
+      {/* Admin Button - positioned in the top right corner */}
+      <div className="absolute top-4 right-4">
+        <Button 
+          size="sm"
+          variant="ghost"
+          onClick={() => navigate('/admin')}
+          className="flex items-center text-gray-500 hover:text-gray-800"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Admin
+        </Button>
       </div>
 
       {/* Main Content */}
