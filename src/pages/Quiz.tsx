@@ -193,17 +193,11 @@ export default function Quiz() {
               <span>AI analyzing your preferences...</span>
             </div>
 
-            {currentQuestion.type === 'multiple' && currentAnswer && (
-              <Button
-                onClick={() => handleNext()}
-                className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <span className="font-medium">Continue</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            )}
-            
-            {currentQuestion.type === 'single' && (
+            {/* Only show continue button for single-choice questions or when multiple choice is not answered yet */}
+            {currentQuestion.type === 'single' ? (
+              <div className="w-24"></div> // Spacer for layout balance when single choice auto-advances
+            ) : (
+              // For multiple choice questions, don't show navigation button here since QuestionCard handles it
               <div className="w-24"></div> // Spacer for layout balance
             )}
           </div>
