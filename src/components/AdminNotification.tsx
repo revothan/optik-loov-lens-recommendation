@@ -12,6 +12,9 @@ const AdminNotification: React.FC = () => {
   const [registeredDevices, setRegisteredDevices] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Firebase Cloud Function URL
+  const functionUrl = 'https://us-central1-loov-bd942.cloudfunctions.net/sendNotificationToAll';
+
   // Check for existing authentication
   useEffect(() => {
     const storedAuth = localStorage.getItem('adminAuthenticated');
@@ -84,9 +87,6 @@ const AdminNotification: React.FC = () => {
     setMessage('Mengirim notifikasi ke semua perangkat...');
 
     try {
-      // This would be your Firebase Cloud Function URL
-      const functionUrl = 'https://us-central1-your-project-id.cloudfunctions.net/sendNotificationToAll';
-      
       const response = await fetch(functionUrl, {
         method: 'POST',
         headers: {
