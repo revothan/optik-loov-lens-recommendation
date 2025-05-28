@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { sendNotification, requestNotificationPermission, subscribeToPushNotifications } from '../lib/notificationUtils';
+import React, { useState, useEffect } from 'react';
+import { requestNotificationPermissionAndToken } from '../lib/firebase';
+import { saveToken, getAllTokens } from '../lib/firestore';
 
 const AdminNotification: React.FC = () => {
   const [code, setCode] = useState<string>('');
@@ -8,12 +9,35 @@ const AdminNotification: React.FC = () => {
   const [notificationBody, setNotificationBody] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [subscriptionStatus, setSubscriptionStatus] = useState<string>('');
+  const [registeredDevices, setRegisteredDevices] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Check for existing authentication
+  useEffect(() => {
+    const storedAuth = localStorage.getItem('adminAuthenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
+      fetchRegisteredDevicesCount();
+    }
+  }, []);
+
+  // Fetch the count of registered devices
+  const fetchRegisteredDevicesCount = async () => {
+    try {
+      const tokens = await getAllTokens();
+      setRegisteredDevices(tokens.length);
+    } catch (error) {
+      console.error('Error fetching registered devices:', error);
+    }
+  };
 
   // Handle code verification
   const handleVerify = () => {
     if (code === '3374') {
       setIsAuthenticated(true);
+      localStorage.setItem('adminAuthenticated', 'true');
       setMessage('Kode berhasil diverifikasi. Anda dapat mengirim notifikasi sekarang.');
+      fetchRegisteredDevicesCount();
     } else {
       setMessage('Kode salah. Silakan coba lagi.');
     }
@@ -21,42 +45,76 @@ const AdminNotification: React.FC = () => {
 
   // Handle subscription to notifications
   const handleSubscribe = async () => {
+    setIsLoading(true);
     setSubscriptionStatus('Meminta izin notifikasi...');
-    const permissionGranted = await requestNotificationPermission();
     
-    if (permissionGranted) {
-      setSubscriptionStatus('Izin diberikan, mendaftarkan subscription...');
-      const subscription = await subscribeToPushNotifications();
+    try {
+      const fcmToken = await requestNotificationPermissionAndToken();
       
-      if (subscription) {
-        setSubscriptionStatus('Berhasil berlangganan notifikasi!');
+      if (fcmToken) {
+        setSubscriptionStatus('Token FCM diperoleh, menyimpan ke database...');
+        
+        const saved = await saveToken(fcmToken);
+        
+        if (saved) {
+          setSubscriptionStatus('Berhasil berlangganan notifikasi!');
+          fetchRegisteredDevicesCount();
+        } else {
+          setSubscriptionStatus('Gagal menyimpan token ke database.');
+        }
       } else {
-        setSubscriptionStatus('Gagal berlangganan notifikasi.');
+        setSubscriptionStatus('Gagal mendapatkan token FCM. Periksa izin notifikasi.');
       }
-    } else {
-      setSubscriptionStatus('Izin notifikasi ditolak.');
+    } catch (error) {
+      console.error('Error in subscription process:', error);
+      setSubscriptionStatus(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle sending notification
+  // Handle sending notification to all devices
   const handleSendNotification = async () => {
     if (!notificationTitle) {
       setMessage('Judul notifikasi wajib diisi.');
       return;
     }
 
+    setIsLoading(true);
+    setMessage('Mengirim notifikasi ke semua perangkat...');
+
     try {
-      await sendNotification(notificationTitle, {
-        body: notificationBody || 'Notifikasi dari Optik LOOV',
-      });
-      setMessage('Notifikasi berhasil dikirim!');
+      // This would be your Firebase Cloud Function URL
+      const functionUrl = 'https://us-central1-your-project-id.cloudfunctions.net/sendNotificationToAll';
       
-      // Clear form
-      setNotificationTitle('');
-      setNotificationBody('');
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: notificationTitle,
+          body: notificationBody || 'Notifikasi dari Optik LOOV',
+          adminCode: '3374' // This should be securely handled in production
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setMessage(`Notifikasi berhasil dikirim ke ${result.sent} dari ${result.total} perangkat!`);
+        
+        // Clear form
+        setNotificationTitle('');
+        setNotificationBody('');
+      } else {
+        setMessage(`Gagal mengirim notifikasi: ${result.error}`);
+      }
     } catch (error) {
       console.error('Error sending notification:', error);
-      setMessage('Gagal mengirim notifikasi. Lihat konsol untuk detail.');
+      setMessage(`Gagal mengirim notifikasi: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,11 +146,23 @@ const AdminNotification: React.FC = () => {
         <div>
           <div className="mb-6">
             <h3 className="font-semibold mb-2">Langganan Notifikasi</h3>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm text-gray-600">Perangkat terdaftar: {registeredDevices}</span>
+              <button
+                onClick={fetchRegisteredDevicesCount}
+                className="text-xs text-blue-500 hover:text-blue-700"
+              >
+                Refresh
+              </button>
+            </div>
             <button
               onClick={handleSubscribe}
-              className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+              disabled={isLoading}
+              className={`w-full px-4 py-2 bg-green-500 text-white rounded-md ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
+              }`}
             >
-              Minta Izin Notifikasi
+              {isLoading ? 'Memproses...' : 'Daftarkan Perangkat Ini'}
             </button>
             {subscriptionStatus && (
               <p className="mt-2 text-sm text-gray-600">{subscriptionStatus}</p>
@@ -100,7 +170,7 @@ const AdminNotification: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">Kirim Notifikasi</h3>
+            <h3 className="font-semibold mb-2">Kirim Notifikasi ke Semua Perangkat</h3>
             <div className="space-y-3">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
@@ -134,14 +204,23 @@ const AdminNotification: React.FC = () => {
           
           <button
             onClick={handleSendNotification}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            disabled={isLoading || registeredDevices === 0}
+            className={`w-full px-4 py-2 bg-blue-500 text-white rounded-md ${
+              isLoading || registeredDevices === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+            }`}
           >
-            Kirim Notifikasi
+            {isLoading ? 'Mengirim...' : 'Kirim Notifikasi ke Semua Perangkat'}
           </button>
           
           {message && (
             <p className={`mt-4 text-sm ${message.includes('berhasil') ? 'text-green-600' : 'text-red-500'}`}>
               {message}
+            </p>
+          )}
+          
+          {registeredDevices === 0 && (
+            <p className="mt-2 text-xs text-amber-600">
+              Tidak ada perangkat terdaftar. Daftarkan perangkat ini atau tambahkan perangkat lain terlebih dahulu.
             </p>
           )}
         </div>
