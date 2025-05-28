@@ -21,6 +21,10 @@ const messaging = getMessaging(app);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
+// VAPID key for web push notifications
+// Get this from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
+const VAPID_KEY = 'BIb15bWKykwYL0HnDCkdZ-6z5BnttJZZVQO8HmShXsXQHx7Sv13pAQarDFgf8vMZyarb8lbj5X4_-lcw_-m-v-k';
+
 // Function to request notification permission and get FCM token
 export const requestNotificationPermissionAndToken = async () => {
   try {
@@ -32,11 +36,15 @@ export const requestNotificationPermissionAndToken = async () => {
       return null;
     }
     
+    // Make sure VAPID_KEY is defined
+    if (!VAPID_KEY) {
+      console.error('VAPID key is not defined');
+      return null;
+    }
+    
     // Get FCM token
-    // Note: You'll need to generate a VAPID key from Firebase Console
-    // Project Settings > Cloud Messaging > Web Push certificates
     const token = await getToken(messaging, {
-      vapidKey: 'BIb15bWKykwYL0HnDCkdZ-6z5BnttJZZVQO8HmShXsXQHx7Sv13pAQarDFgf8vMZyarb8lbj5X4_-lcw_-m-v-k' // Replace with your actual VAPID key
+      vapidKey: VAPID_KEY
     });
     
     if (token) {
@@ -61,8 +69,8 @@ export const setupMessageListener = () => {
     if (payload.notification) {
       const { title, body } = payload.notification;
       
-      new Notification(title, {
-        body,
+      new Notification(title || 'Notification', {
+        body: body || 'You received a notification',
         icon: '/pwa-192x192.png'
       });
     }
