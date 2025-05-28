@@ -108,7 +108,7 @@ export default function Result() {
       </main>
 
       {/* Add custom CSS */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;
