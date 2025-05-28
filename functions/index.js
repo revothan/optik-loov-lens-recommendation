@@ -20,7 +20,7 @@ admin.initializeApp();
  * Send a notification to all registered devices
  * 
  * Triggered by an HTTP request:
- * https://us-central1-your-project-id.cloudfunctions.net/sendNotificationToAll
+ * https://us-central1-loov-bd942.cloudfunctions.net/sendNotificationToAll
  * 
  * Request body:
  * {
@@ -107,7 +107,7 @@ exports.sendNotificationToAll = functions.https.onRequest(async (req, res) => {
 
 // Example usage (this would be called from your frontend):
 /*
-fetch('https://us-central1-your-project-id.cloudfunctions.net/sendNotificationToAll', {
+fetch('https://us-central1-loov-bd942.cloudfunctions.net/sendNotificationToAll', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
