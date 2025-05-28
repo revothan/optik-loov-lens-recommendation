@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Question } from '@/logic/lensLogic'
-import QuestionProgress from './QuestionProgress'
-import QuestionHeader from './QuestionHeader'
 import OptionButton from './OptionButton'
 import ContinueButton from './ContinueButton'
 
@@ -65,49 +63,41 @@ export default function QuestionCard({
       className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
         isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
       }`}
-      style={{ position: 'relative', zIndex: 1 }}
     >
-      <QuestionProgress 
-        questionNumber={questionNumber} 
-        totalQuestions={totalQuestions} 
-      />
-
-      <Card className="relative overflow-visible border-0 shadow-2xl bg-white/95 backdrop-blur-xl" style={{ zIndex: 1 }}>
-        {/* Animated gradient border */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 animate-pulse" style={{ zIndex: -1 }}></div>
-        <div className="absolute inset-[1px] bg-white rounded-2xl" style={{ zIndex: -1 }}></div>
-        
-        <div className="relative" style={{ zIndex: 2 }}>
-          <QuestionHeader 
-            question={question.question}
-            isMultiple={question.type === 'multiple'}
-          />
-          
-          <CardContent className="px-8 pb-8" style={{ position: 'relative', zIndex: 3 }}>
-            <div className="space-y-4 mb-6">
-              {question.options.map((option, index) => (
-                <OptionButton
-                  key={option.id}
-                  option={option}
-                  isSelected={isSelected(option.value)}
-                  questionType={question.type}
-                  onSelect={question.type === 'single' ? handleSingleSelect : handleMultiSelect}
-                  index={index}
-                />
-              ))}
-            </div>
-            
-            {/* Continue button for multiple choice questions */}
+      <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-xl">
+        <CardContent className="p-8">
+          {/* Simple Question Header */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+              {question.question}
+            </h2>
             {question.type === 'multiple' && (
-              <div style={{ position: 'relative', zIndex: 10000, clear: 'both' }}>
-                <ContinueButton
-                  selectedCount={selectedAnswers.length}
-                  onContinue={handleMultiSelectSubmit}
-                />
-              </div>
+              <p className="text-sm text-gray-500">Select all that apply</p>
             )}
-          </CardContent>
-        </div>
+          </div>
+          
+          {/* Answer Options */}
+          <div className="space-y-4 mb-6">
+            {question.options.map((option, index) => (
+              <OptionButton
+                key={option.id}
+                option={option}
+                isSelected={isSelected(option.value)}
+                questionType={question.type}
+                onSelect={question.type === 'single' ? handleSingleSelect : handleMultiSelect}
+                index={index}
+              />
+            ))}
+          </div>
+          
+          {/* Continue button for multiple choice questions */}
+          {question.type === 'multiple' && (
+            <ContinueButton
+              selectedCount={selectedAnswers.length}
+              onContinue={handleMultiSelectSubmit}
+            />
+          )}
+        </CardContent>
       </Card>
     </div>
   )
