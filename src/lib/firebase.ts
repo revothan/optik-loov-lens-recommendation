@@ -2,23 +2,24 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
 // Your Firebase configuration
-// This is just a placeholder - you'll need to replace with your actual Firebase config
-// from the Firebase Console when you create your project
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBC63M7ZuzHIkxDKVOWOicKkuds0dcDiNQ",
+  authDomain: "loov-bd942.firebaseapp.com",
+  projectId: "loov-bd942",
+  storageBucket: "loov-bd942.firebasestorage.app",
+  messagingSenderId: "672250563936",
+  appId: "1:672250563936:web:7863dd4640a6ec0346e205",
+  measurementId: "G-7X9X0X0YT8"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
 
 // Function to request notification permission and get FCM token
 export const requestNotificationPermissionAndToken = async () => {
@@ -32,10 +33,10 @@ export const requestNotificationPermissionAndToken = async () => {
     }
     
     // Get FCM token
-    // Note: You'll need to replace 'YOUR_VAPID_KEY' with your actual VAPID key
-    // from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
+    // Note: You'll need to generate a VAPID key from Firebase Console
+    // Project Settings > Cloud Messaging > Web Push certificates
     const token = await getToken(messaging, {
-      vapidKey: 'YOUR_VAPID_KEY'
+      vapidKey: 'BIb15bWKykwYL0HnDCkdZ-6z5BnttJZZVQO8HmShXsXQHx7Sv13pAQarDFgf8vMZyarb8lbj5X4_-lcw_-m-v-k' // Replace with your actual VAPID key
     });
     
     if (token) {
@@ -68,4 +69,4 @@ export const setupMessageListener = () => {
   });
 };
 
-export { app, messaging, db };
+export { app, messaging, db, analytics };
