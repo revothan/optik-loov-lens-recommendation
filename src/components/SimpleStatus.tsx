@@ -1,5 +1,3 @@
-import { Sparkles } from 'lucide-react'
-
 interface SimpleStatusProps {
   currentStep: number
   totalSteps: number
