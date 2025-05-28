@@ -19,14 +19,22 @@ export default function QuestionCard({
   questionNumber = 1, 
   totalQuestions = 10 
 }: QuestionCardProps) {
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(
-    Array.isArray(currentAnswer) ? currentAnswer : currentAnswer ? [currentAnswer] : []
-  )
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([])
   const [isVisible, setIsVisible] = useState(false)
 
+  // Reset selected answers when question changes
   useEffect(() => {
-    setIsVisible(true)
-  }, [question.id])
+    const initialAnswers = Array.isArray(currentAnswer) ? currentAnswer : currentAnswer ? [currentAnswer] : []
+    setSelectedAnswers(initialAnswers)
+    setIsVisible(false)
+    
+    // Trigger visibility after a small delay for smooth transition
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [question.id, currentAnswer])
 
   const handleSingleSelect = (value: string) => {
     setSelectedAnswers([value])
@@ -43,6 +51,7 @@ export default function QuestionCard({
   }
 
   const handleMultiSelectSubmit = () => {
+    console.log('Button clicked, selected answers:', selectedAnswers) // Debug log
     if (selectedAnswers.length > 0) {
       onAnswer(selectedAnswers)
     }
@@ -51,7 +60,7 @@ export default function QuestionCard({
   const isSelected = (value: string) => selectedAnswers.includes(value)
 
   return (
-    <div className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
+    <div className={`w-full max-w-3xl mx-auto transform transition-all duration-700 relative ${
       isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
     }`}>
       {/* Progress indicator */}
@@ -65,12 +74,12 @@ export default function QuestionCard({
         </div>
       </div>
 
-      <Card className="relative overflow-hidden border-0 shadow-2xl bg-white/95 backdrop-blur-xl">
+      <Card className="relative overflow-hidden border-0 shadow-2xl bg-white/95 backdrop-blur-xl z-10">
         {/* Animated gradient border */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 animate-pulse"></div>
         <div className="absolute inset-[1px] bg-white rounded-2xl"></div>
         
-        <div className="relative">
+        <div className="relative z-20">
           <CardHeader className="pb-6 pt-8">
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -114,7 +123,7 @@ export default function QuestionCard({
                           : 'border-gray-300 group-hover:border-purple-400'
                       }`}>
                         {isSelected(option.value) && (
-                          <Check className="w-4 h-4 text-white animate-scale-in" />
+                          <Check className="w-4 h-4 text-white" />
                         )}
                       </div>
                       
@@ -128,9 +137,9 @@ export default function QuestionCard({
                     </div>
                     
                     {isSelected(option.value) && (
-                      <div className="flex items-center space-x-2 animate-fade-in">
+                      <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                        <Sparkles className="w-5 h-5 text-purple-500 animate-pulse" />
+                        <Sparkles className="w-5 h-5 text-purple-500" />
                       </div>
                     )}
                   </div>
@@ -139,11 +148,12 @@ export default function QuestionCard({
             </div>
             
             {question.type === 'multiple' && selectedAnswers.length > 0 && (
-              <div className="mt-8 animate-slide-up">
+              <div className="mt-8 relative z-30">
                 <Button 
                   onClick={handleMultiSelectSubmit}
-                  className="w-full group text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] hover:cursor-pointer"
+                  className="w-full group text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] relative z-40"
                   size="lg"
+                  type="button"
                 >
                   <span>Lanjutkan dengan {selectedAnswers.length} pilihan</span>
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -165,22 +175,6 @@ export default function QuestionCard({
           </CardContent>
         </div>
       </Card>
-      
-      {/* Floating particles effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60 animate-bounce"
-            style={{
-              left: `${20 + i * 30}%`,
-              top: `${20 + i * 20}%`,
-              animationDelay: `${i * 1000}ms`,
-              animationDuration: '3s'
-            }}
-          ></div>
-        ))}
-      </div>
     </div>
   )
 }
