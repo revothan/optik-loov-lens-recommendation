@@ -83,27 +83,30 @@ export default function QuestionCard({
   const isSelected = (value: string) => selectedAnswers.includes(value)
 
   return (
-    <div className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
-      isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
-    }`}>
+    <div 
+      className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
+        isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
+      }`}
+      style={{ position: 'relative', zIndex: 1 }}
+    >
       <QuestionProgress 
         questionNumber={questionNumber} 
         totalQuestions={totalQuestions} 
       />
 
-      <Card className="relative overflow-hidden border-0 shadow-2xl bg-white/95 backdrop-blur-xl">
+      <Card className="relative overflow-visible border-0 shadow-2xl bg-white/95 backdrop-blur-xl" style={{ zIndex: 1 }}>
         {/* Animated gradient border */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 animate-pulse"></div>
-        <div className="absolute inset-[1px] bg-white rounded-2xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 animate-pulse" style={{ zIndex: -1 }}></div>
+        <div className="absolute inset-[1px] bg-white rounded-2xl" style={{ zIndex: -1 }}></div>
         
-        <div className="relative">
+        <div className="relative" style={{ zIndex: 2 }}>
           <QuestionHeader 
             question={question.question}
             isMultiple={question.type === 'multiple'}
           />
           
-          <CardContent className="px-8 pb-8">
-            <div className="space-y-4">
+          <CardContent className="px-8 pb-8" style={{ position: 'relative', zIndex: 3 }}>
+            <div className="space-y-4 mb-6">
               {question.options.map((option, index) => (
                 <OptionButton
                   key={option.id}
@@ -116,11 +119,14 @@ export default function QuestionCard({
               ))}
             </div>
             
+            {/* Ensure continue button container has no conflicting styles */}
             {question.type === 'multiple' && (
-              <ContinueButton
-                selectedCount={selectedAnswers.length}
-                onContinue={handleMultiSelectSubmit}
-              />
+              <div style={{ position: 'relative', zIndex: 10000, clear: 'both' }}>
+                <ContinueButton
+                  selectedCount={selectedAnswers.length}
+                  onContinue={handleMultiSelectSubmit}
+                />
+              </div>
             )}
           </CardContent>
         </div>
@@ -128,7 +134,7 @@ export default function QuestionCard({
       
       {/* Debug info - remove in production */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="mt-4 p-4 bg-gray-100 rounded text-xs">
+        <div className="mt-4 p-4 bg-gray-100 rounded text-xs" style={{ zIndex: 1000 }}>
           <div>Question: {question.id} ({question.type})</div>
           <div>Selected: {JSON.stringify(selectedAnswers)}</div>
           <div>Show button: {question.type === 'multiple' ? 'yes' : 'no'}</div>
