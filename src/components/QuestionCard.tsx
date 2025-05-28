@@ -23,21 +23,15 @@ export default function QuestionCard({
     Array.isArray(currentAnswer) ? currentAnswer : currentAnswer ? [currentAnswer] : []
   )
   const [isVisible, setIsVisible] = useState(false)
-  const [selectedAnimation, setSelectedAnimation] = useState<string | null>(null)
 
   useEffect(() => {
     setIsVisible(true)
-    setSelectedAnimation(null)
   }, [question.id])
 
   const handleSingleSelect = (value: string) => {
     setSelectedAnswers([value])
-    setSelectedAnimation(value)
-    
-    // Add a slight delay for animation before proceeding
-    setTimeout(() => {
-      onAnswer(value)
-    }, 300)
+    // Immediate response for single select
+    setTimeout(() => onAnswer(value), 200)
   }
 
   const handleMultiSelect = (value: string) => {
@@ -55,7 +49,6 @@ export default function QuestionCard({
   }
 
   const isSelected = (value: string) => selectedAnswers.includes(value)
-  const isAnimating = (value: string) => selectedAnimation === value
 
   return (
     <div className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
@@ -91,7 +84,7 @@ export default function QuestionCard({
             
             {question.type === 'multiple' && (
               <p className="text-center text-sm text-gray-500 mt-3 font-medium">
-                💡 Anda dapat memilih lebih dari satu opsi
+                💡 Pilih satu atau lebih opsi, lalu klik tombol lanjutkan
               </p>
             )}
           </CardHeader>
@@ -110,7 +103,7 @@ export default function QuestionCard({
                     isSelected(option.value)
                       ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 shadow-lg scale-[1.02]'
                       : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/50 hover:shadow-md'
-                  } ${isAnimating(option.value) ? 'animate-bounce-in' : ''}`}
+                  }`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex items-center justify-between">
@@ -149,7 +142,7 @@ export default function QuestionCard({
               <div className="mt-8 animate-slide-up">
                 <Button 
                   onClick={handleMultiSelectSubmit}
-                  className="w-full group text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full group text-lg py-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] hover:cursor-pointer"
                   size="lg"
                 >
                   <span>Lanjutkan dengan {selectedAnswers.length} pilihan</span>
@@ -178,7 +171,7 @@ export default function QuestionCard({
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className={`absolute w-1 h-1 bg-purple-400 rounded-full opacity-60 animate-bounce`}
+            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60 animate-bounce"
             style={{
               left: `${20 + i * 30}%`,
               top: `${20 + i * 20}%`,
