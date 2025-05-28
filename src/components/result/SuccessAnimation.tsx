@@ -16,11 +16,6 @@ export default function SuccessAnimation() {
         <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
           Perfect Match <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Found!</span>
         </h2>
-        
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Our advanced AI has analyzed your unique profile and identified the 
-          <span className="font-semibold text-purple-600"> optimal lens solutions</span> tailored specifically for you.
-        </p>
       </div>
     </div>
   )

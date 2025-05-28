@@ -60,19 +60,19 @@ export default function RecommendationCard({ recommendation: rec, index }: Recom
         </CardHeader>
         
         <CardContent className="p-8">
-          <p className="text-gray-600 text-lg leading-relaxed mb-6">{rec.description}</p>
-
           {/* Features Grid */}
           <div className="mb-8">
             <h4 className="font-bold text-lg mb-4 flex items-center text-gray-900">
               <Sparkles className="w-5 h-5 mr-2 text-purple-500" />
-              Key Features
+              Fitur Lensa
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {rec.features.map((feature, idx) => (
                 <div key={idx} className="flex items-start space-x-3 group">
                   <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full group-hover:scale-150 transition-transform mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700 font-medium leading-relaxed">{feature}</span>
+                  <span className="text-gray-700 font-medium leading-relaxed">
+                    ➤ {feature}
+                  </span>
                 </div>
               ))}
             </div>
