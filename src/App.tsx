@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Quiz from './pages/Quiz'
 import Result from './pages/Result'
 import Admin from './pages/Admin'
+import InstallPWAGuide from './components/InstallPWAGuide'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/result" element={<Result />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
+        <InstallPWAGuide />
       </div>
     </Router>
   )
