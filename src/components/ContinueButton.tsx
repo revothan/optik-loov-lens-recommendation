@@ -6,7 +6,7 @@ interface ContinueButtonProps {
 }
 
 export default function ContinueButton({ selectedCount, onContinue }: ContinueButtonProps) {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     console.log('=== CONTINUE BUTTON CLICK EVENT ===')
@@ -18,12 +18,16 @@ export default function ContinueButton({ selectedCount, onContinue }: ContinueBu
     onContinue()
   }
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     console.log('Button mouse down event')
   }
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     console.log('Button mouse up event')
+  }
+
+  const handleMouseEnter = () => {
+    console.log('Button mouse enter - hover working')
   }
 
   if (selectedCount === 0) {
@@ -31,19 +35,33 @@ export default function ContinueButton({ selectedCount, onContinue }: ContinueBu
   }
 
   return (
-    <div className="mt-8 w-full">
-      {/* Use native button instead of UI library component */}
-      <button
+    <div className="mt-8 w-full" style={{ position: 'relative', zIndex: 9999 }}>
+      {/* Use div with click handler - bypass all button CSS issues */}
+      <div
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        className="w-full group text-lg py-6 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer rounded-md text-white font-medium flex items-center justify-center space-x-2 border-0 outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-        type="button"
-        style={{ pointerEvents: 'auto' }}
+        onMouseEnter={handleMouseEnter}
+        className="w-full group text-lg py-6 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer rounded-md text-white font-medium flex items-center justify-center space-x-2 select-none"
+        style={{ 
+          pointerEvents: 'auto',
+          position: 'relative',
+          zIndex: 9999,
+          minHeight: '60px',
+          userSelect: 'none'
+        }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleClick(e as any)
+          }
+        }}
       >
         <span>Lanjutkan dengan {selectedCount} pilihan</span>
         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-      </button>
+      </div>
       
       <div className="flex justify-center mt-4">
         <div className="flex space-x-1">
@@ -57,9 +75,24 @@ export default function ContinueButton({ selectedCount, onContinue }: ContinueBu
         </div>
       </div>
       
-      {/* Debug overlay */}
-      <div className="mt-2 text-xs text-center text-gray-500">
-        Click area test - Count: {selectedCount}
+      {/* Debug overlay - make it more prominent */}
+      <div className="mt-2 text-sm text-center text-red-600 font-bold bg-yellow-100 py-2 rounded">
+        🎯 CLICK AREA TEST - Count: {selectedCount} - Try clicking this button!
+      </div>
+      
+      {/* Additional test button */}
+      <div className="mt-2">
+        <div
+          onClick={() => {
+            console.log('TEST BUTTON CLICKED!')
+            alert('Test button works! Now trying main action...')
+            onContinue()
+          }}
+          className="w-full bg-red-500 text-white py-2 px-4 rounded cursor-pointer text-center"
+          style={{ zIndex: 10000, position: 'relative' }}
+        >
+          🚨 EMERGENCY CONTINUE BUTTON (Click if main button fails)
+        </div>
       </div>
     </div>
   )
