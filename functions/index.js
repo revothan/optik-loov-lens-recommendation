@@ -1,16 +1,4 @@
 // functions/index.js
-// This file would be deployed to Firebase Cloud Functions
-
-/**
- * This is a reference implementation for a Firebase Cloud Function 
- * that would send notifications to all registered devices.
- * 
- * To use this, you would need to:
- * 1. Set up Firebase Cloud Functions in your project
- * 2. Deploy this function to Firebase
- * 3. Call this function from your admin panel
- */
-
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -104,21 +92,3 @@ exports.sendNotificationToAll = functions.https.onRequest(async (req, res) => {
     res.status(500).send(`Error sending notifications: ${error.message}`);
   }
 });
-
-// Example usage (this would be called from your frontend):
-/*
-fetch('https://us-central1-loov-bd942.cloudfunctions.net/sendNotificationToAll', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    title: 'New Sale!',
-    body: 'Get 20% off on all lenses this weekend!',
-    adminCode: '3374'
-  }),
-})
-.then(response => response.json())
-.then(data => console.log('Success:', data))
-.catch(error => console.error('Error:', error));
-*/
