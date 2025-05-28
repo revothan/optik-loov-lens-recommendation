@@ -10,7 +10,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Fokus tajam untuk jarak dekat, menengah, dan jauh tanpa perlu banyak gerakan kepala',
         'Ideal untuk multitasking dan pengguna aktif'
       ],
-      price: 'Rp 4.000.000 - 6.000.000',
+      price: 'Rp 4.500.000 - 22.000.000',
       description: 'Varilux X Series ➤ Fokus tajam untuk jarak dekat, menengah, dan jauh tanpa perlu banyak gerakan kepala. ➤ Ideal untuk multitasking dan pengguna aktif.',
       reasons: ['Teknologi terdepan untuk presbyopia', 'Performa optimal untuk pengguna aktif'],
       category: 'premium',
@@ -23,7 +23,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Teknologi wavefront untuk penglihatan lebih natural dan nyaman',
         'Transisi mulus antarjarak, cocok untuk aktivitas harian intensif'
       ],
-      price: 'Rp 3.500.000 - 5.000.000',
+      price: 'Rp 4.500.000 - 22.000.000',
       description: 'Varilux Physio ➤ Teknologi wavefront untuk penglihatan lebih natural dan nyaman. ➤ Transisi mulus antarjarak, cocok untuk aktivitas harian intensif.',
       reasons: ['Teknologi wavefront untuk kenyamanan maksimal', 'Cocok untuk aktivitas intensif'],
       category: 'premium',
@@ -36,7 +36,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Desain menyesuaikan gaya hidup modern dan penggunaan layar',
         'Transisi nyaman antarjarak, ideal untuk mobilitas tinggi'
       ],
-      price: 'Rp 3.200.000 - 4.800.000',
+      price: 'Rp 4.500.000 - 22.000.000',
       description: 'Zeiss SmartLife Progressive ➤ Desain menyesuaikan gaya hidup modern dan penggunaan layar. ➤ Transisi nyaman antarjarak, ideal untuk mobilitas tinggi.',
       reasons: ['Disesuaikan untuk gaya hidup modern', 'Optimal untuk pengguna mobile dan digital'],
       category: 'premium',
@@ -51,7 +51,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Mudah beradaptasi, pandangan stabil di semua jarak',
         'Cocok untuk pengguna progresif pemula'
       ],
-      price: 'Rp 2.000.000 - 3.000.000',
+      price: 'Rp 2.700.000 - 4.700.000',
       description: 'Varilux Comfort Max ➤ Mudah beradaptasi, pandangan stabil di semua jarak. ➤ Cocok untuk pengguna progresif pemula.',
       reasons: ['Mudah beradaptasi untuk pemula', 'Pandangan stabil dan nyaman'],
       category: 'standard',
@@ -64,7 +64,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Desain individual sesuai resep mata',
         'Pandangan jernih dan tajam, tampilan lensa lebih tipis'
       ],
-      price: 'Rp 1.800.000 - 2.800.000',
+      price: 'Rp 2.700.000 - 4.700.000',
       description: 'Kodak Unique II HD ➤ Desain individual sesuai resep mata. ➤ Pandangan jernih dan tajam, tampilan lensa lebih tipis.',
       reasons: ['Desain individual sesuai kebutuhan', 'Tampilan lensa lebih estetis'],
       category: 'standard',
@@ -77,7 +77,7 @@ export const progressiveLenses: Record<'premium' | 'standard', LensRecommendatio
         'Lensa progresif simpel, nyaman dan ekonomis',
         'Transisi antarjarak tetap halus'
       ],
-      price: 'Rp 1.500.000 - 2.500.000',
+      price: 'Rp 2.700.000 - 4.700.000',
       description: 'Zeiss Light 2 ➤ Lensa progresif simpel, nyaman dan ekonomis. ➤ Transisi antarjarak tetap halus.',
       reasons: ['Solusi ekonomis dengan kualitas baik', 'Transisi yang halus dan nyaman'],
       category: 'standard',
@@ -96,7 +96,7 @@ export const digitalLenses: Record<'premium' | 'standard', LensRecommendation[]>
         'Mengurangi ketegangan mata akibat layar digital',
         'Ada bantuan di area baca untuk kenyamanan ekstra'
       ],
-      price: 'Rp 2.000.000 - 3.000.000',
+      price: 'Rp 1.900.000 - 5.000.000',
       description: 'Eyezen Boost ➤ Mengurangi ketegangan mata akibat layar digital. ➤ Ada bantuan di area baca untuk kenyamanan ekstra.',
       reasons: ['Khusus untuk pengguna digital intensif', 'Bantuan baca tambahan untuk kenyamanan'],
       category: 'premium',
@@ -109,7 +109,7 @@ export const digitalLenses: Record<'premium' | 'standard', LensRecommendation[]>
         'Cocok untuk usia 20–45 tahun yang aktif menggunakan gadget',
         'Transisi dari dekat ke jauh lebih ringan dibanding progresif biasa'
       ],
-      price: 'Rp 1.800.000 - 2.500.000',
+      price: 'Rp 1.900.000 - 5.000.000',
       description: 'Zeiss Digital Light 2 ➤ Cocok untuk usia 20–45 tahun yang aktif menggunakan gadget. ➤ Transisi dari dekat ke jauh lebih ringan dibanding progresif biasa.',
       reasons: ['Ideal untuk pengguna gadget aktif', 'Transisi lebih nyaman daripada progresif konvensional'],
       category: 'premium',
@@ -124,7 +124,7 @@ export const digitalLenses: Record<'premium' | 'standard', LensRecommendation[]>
         'Tambahan daya baca untuk kegiatan depan layar',
         'Ringan, nyaman untuk remaja dan dewasa muda'
       ],
-      price: 'Rp 1.200.000 - 2.000.000',
+      price: 'Rp 1.000.000 - 2.300.000',
       description: 'Kodak PowerUp ➤ Tambahan daya baca untuk kegiatan depan layar. ➤ Ringan, nyaman untuk remaja dan dewasa muda.',
       reasons: ['Bantuan khusus untuk aktivitas layar', 'Nyaman untuk pengguna muda'],
       category: 'standard',
@@ -143,7 +143,7 @@ export const photochromicLenses: Record<'premium' | 'standard', LensRecommendati
         'Gelap dalam hitungan detik saat di luar ruangan',
         'Teknologi Chromea7 untuk warna lebih stabil dan perlindungan maksimal'
       ],
-      price: 'Rp 2.500.000 - 4.000.000',
+      price: 'Rp 2.900.000 - 6.500.000',
       description: 'Transitions GEN S ➤ Gelap dalam hitungan detik saat di luar ruangan. ➤ Teknologi Chromea7 untuk warna lebih stabil dan perlindungan maksimal.',
       reasons: ['Perubahan warna tercepat di kelasnya', 'Perlindungan maksimal dengan teknologi terbaru'],
       category: 'premium',
@@ -156,7 +156,7 @@ export const photochromicLenses: Record<'premium' | 'standard', LensRecommendati
         'Cepat terang dan gelap, bahkan di cuaca ekstrem',
         'Proteksi terhadap UV dan blue light sekaligus'
       ],
-      price: 'Rp 2.200.000 - 3.500.000',
+      price: 'Rp 2.900.000 - 6.500.000',
       description: 'Zeiss PhotoFusion X ➤ Cepat terang dan gelap, bahkan di cuaca ekstrem. ➤ Proteksi terhadap UV dan blue light sekaligus.',
       reasons: ['Performa optimal di segala cuaca', 'Perlindungan komprehensif UV dan blue light'],
       category: 'premium',
@@ -171,7 +171,7 @@ export const photochromicLenses: Record<'premium' | 'standard', LensRecommendati
         'Lensa bening di dalam, berubah gelap di luar',
         'Tersedia juga versi dengan filter blue light'
       ],
-      price: 'Rp 1.500.000 - 2.500.000',
+      price: 'Rp 890.000 - 1.500.000',
       description: 'Kodak EvoBlue ➤ Lensa bening di dalam, berubah gelap di luar. ➤ Tersedia juga versi dengan filter blue light.',
       reasons: ['Solusi ekonomis untuk photochromic', 'Bonus perlindungan blue light'],
       category: 'standard',
@@ -190,7 +190,7 @@ export const customSingleVisionLenses: Record<'premium' | 'standard', LensRecomm
         'Lapisan anti-refleksi premium, anti gores, tahan air, mudah dibersihkan',
         'Cocok untuk pemakaian harian dengan performa tinggi'
       ],
-      price: 'Rp 1.800.000 - 2.800.000',
+      price: 'Rp 1.200.000 - 4.900.000',
       description: 'Crizal (Essilor) ➤ Lapisan anti-refleksi premium, anti gores, tahan air, mudah dibersihkan. ➤ Cocok untuk pemakaian harian dengan performa tinggi.',
       reasons: ['Lapisan premium dengan durabilitas tinggi', 'Performa optimal untuk penggunaan harian'],
       category: 'premium',
@@ -203,7 +203,7 @@ export const customSingleVisionLenses: Record<'premium' | 'standard', LensRecomm
         'Desain lensa lebih presisi sesuai bentuk mata dan bingkai',
         'Pandangan lebih tajam dan nyaman di semua area'
       ],
-      price: 'Rp 1.600.000 - 2.500.000',
+      price: 'Rp 1.200.000 - 4.900.000',
       description: 'Zeiss SV Superb ➤ Desain lensa lebih presisi sesuai bentuk mata dan bingkai. ➤ Pandangan lebih tajam dan nyaman di semua area.',
       reasons: ['Desain presisi individual', 'Kenyamanan optimal di seluruh area lensa'],
       category: 'premium',
@@ -218,7 +218,7 @@ export const customSingleVisionLenses: Record<'premium' | 'standard', LensRecomm
         'Perlindungan UV + blue light dasar',
         'Cocok untuk pengguna yang butuh lensa ekonomis tapi tetap aman'
       ],
-      price: 'Rp 800.000 - 1.500.000',
+      price: 'Rp 870.000 - 1.900.000',
       description: 'Kodak UVBlue ➤ Perlindungan UV + blue light dasar. ➤ Cocok untuk pengguna yang butuh lensa ekonomis tapi tetap aman.',
       reasons: ['Solusi ekonomis dengan perlindungan dasar', 'Keamanan mata dengan harga terjangkau'],
       category: 'standard',
@@ -237,7 +237,7 @@ export const stockSingleVisionLenses: Record<'premium' | 'standard', LensRecomme
         'Lensa siap pakai dengan lapisan Crizal (anti silau, tahan kotoran)',
         'Ideal untuk pengguna baru yang ingin langsung pakai'
       ],
-      price: 'Rp 1.400.000 - 2.000.000',
+      price: 'Rp 720.000 - 1.600.000',
       description: 'Crizal FSV ➤ Lensa siap pakai dengan lapisan Crizal (anti silau, tahan kotoran). ➤ Ideal untuk pengguna baru yang ingin langsung pakai.',
       reasons: ['Tersedia cepat dengan kualitas premium', 'Cocok untuk kebutuhan mendesak'],
       category: 'premium',
@@ -250,7 +250,7 @@ export const stockSingleVisionLenses: Record<'premium' | 'standard', LensRecomme
         'Lensa lebih tipis dan ringan, tajam hingga ke tepi',
         'Kualitas optik di atas rata-rata lensa stok biasa'
       ],
-      price: 'Rp 1.200.000 - 1.800.000',
+      price: 'Rp 720.000 - 1.600.000',
       description: 'Zeiss ClearView FSV ➤ Lensa lebih tipis dan ringan, tajam hingga ke tepi. ➤ Kualitas optik di atas rata-rata lensa stok biasa.',
       reasons: ['Kualitas optik superior untuk lensa stok', 'Desain tipis dan ringan'],
       category: 'premium',
@@ -265,7 +265,7 @@ export const stockSingleVisionLenses: Record<'premium' | 'standard', LensRecomme
         'Filter blue light + UV untuk pemakaian harian',
         'Harga ekonomis, tersedia cepat'
       ],
-      price: 'Rp 600.000 - 1.000.000',
+      price: 'Rp 420.000 - 1.050.000',
       description: 'Kodak UVBlue FSV ➤ Filter blue light + UV untuk pemakaian harian. ➤ Harga ekonomis, tersedia cepat.',
       reasons: ['Solusi cepat dan ekonomis', 'Perlindungan dasar yang memadai'],
       category: 'standard',
@@ -278,7 +278,7 @@ export const stockSingleVisionLenses: Record<'premium' | 'standard', LensRecomme
         'Perlindungan dasar dari cahaya biru',
         'Solusi hemat untuk pengguna digital ringan'
       ],
-      price: 'Rp 500.000 - 800.000',
+      price: 'Rp 420.000 - 1.050.000',
       description: 'Polycore UBlue FSV ➤ Perlindungan dasar dari cahaya biru. ➤ Solusi hemat untuk pengguna digital ringan.',
       reasons: ['Harga paling terjangkau', 'Cocok untuk pengguna digital ringan'],
       category: 'standard',
