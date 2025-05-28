@@ -55,7 +55,7 @@ export default function QuestionCard({
   }
 
   const isSelected = (value: string) => selectedAnswers.includes(value)
-  const isAnimating = selectedAnimation === value
+  const isAnimating = (value: string) => selectedAnimation === value
 
   return (
     <div className={`w-full max-w-3xl mx-auto transform transition-all duration-700 ${
@@ -110,7 +110,7 @@ export default function QuestionCard({
                     isSelected(option.value)
                       ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 shadow-lg scale-[1.02]'
                       : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/50 hover:shadow-md'
-                  } ${isAnimating ? 'animate-bounce-in' : ''}`}
+                  } ${isAnimating(option.value) ? 'animate-bounce-in' : ''}`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex items-center justify-between">
