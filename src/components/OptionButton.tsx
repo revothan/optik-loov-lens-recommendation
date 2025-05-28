@@ -20,7 +20,6 @@ export default function OptionButton({
   index 
 }: OptionButtonProps) {
   const handleClick = () => {
-    console.log('Option clicked:', option.value) // Debug log
     onSelect(option.value)
   }
 
