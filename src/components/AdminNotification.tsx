@@ -70,7 +70,7 @@ const AdminNotification: React.FC = () => {
       }
     } catch (error) {
       console.error('Error in subscription process:', error);
-      setSubscriptionStatus(`Error: ${error.message}`);
+      setSubscriptionStatus(`Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
     } finally {
       setIsLoading(false);
     }
@@ -108,11 +108,11 @@ const AdminNotification: React.FC = () => {
         setNotificationTitle('');
         setNotificationBody('');
       } else {
-        setMessage(`Gagal mengirim notifikasi: ${result.error}`);
+        setMessage(`Gagal mengirim notifikasi: ${result.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error sending notification:', error);
-      setMessage(`Gagal mengirim notifikasi: ${error.message}`);
+      setMessage(`Gagal mengirim notifikasi: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
     } finally {
       setIsLoading(false);
     }
