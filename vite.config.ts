@@ -59,6 +59,12 @@ export default defineConfig({
             }
           }
         ]
+      },
+      // Add support for web push notifications
+      devOptions: {
+        enabled: true,
+        type: 'module',
+        navigateFallback: 'index.html'
       }
     })
   ],
