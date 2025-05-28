@@ -1,6 +1,8 @@
 {
   "functions": {
-    "source": "functions"
+    "source": "functions",
+    "runtime": "nodejs18",
+    "region": "us-central1"
   },
   "hosting": {
     "public": "dist",
