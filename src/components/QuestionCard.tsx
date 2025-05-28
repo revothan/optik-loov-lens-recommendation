@@ -24,20 +24,9 @@ export default function QuestionCard({
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([])
   const [isVisible, setIsVisible] = useState(false)
 
-  // Debug logging
-  useEffect(() => {
-    console.log('QuestionCard mounted/updated:', {
-      questionId: question.id,
-      questionType: question.type,
-      selectedAnswers,
-      currentAnswer
-    })
-  }, [question.id, question.type, selectedAnswers, currentAnswer])
-
   // Reset selected answers when question changes
   useEffect(() => {
     const initialAnswers = Array.isArray(currentAnswer) ? currentAnswer : currentAnswer ? [currentAnswer] : []
-    console.log('Setting initial answers:', initialAnswers)
     setSelectedAnswers(initialAnswers)
     setIsVisible(false)
     
@@ -50,7 +39,6 @@ export default function QuestionCard({
   }, [question.id, currentAnswer])
 
   const handleSingleSelect = (value: string) => {
-    console.log('Single select:', value)
     setSelectedAnswers([value])
     // Immediate response for single select
     setTimeout(() => onAnswer(value), 200)
@@ -61,22 +49,12 @@ export default function QuestionCard({
       ? selectedAnswers.filter(a => a !== value)
       : [...selectedAnswers, value]
     
-    console.log('Multi select updated:', { value, newAnswers })
     setSelectedAnswers(newAnswers)
   }
 
   const handleMultiSelectSubmit = () => {
-    console.log('=== CONTINUE BUTTON CLICKED ===')
-    console.log('Selected answers:', selectedAnswers)
-    console.log('Selected count:', selectedAnswers.length)
-    console.log('Question type:', question.type)
-    console.log('Question ID:', question.id)
-    
     if (selectedAnswers.length > 0) {
-      console.log('Calling onAnswer with:', selectedAnswers)
       onAnswer(selectedAnswers)
-    } else {
-      console.warn('No answers selected!')
     }
   }
 
@@ -119,7 +97,7 @@ export default function QuestionCard({
               ))}
             </div>
             
-            {/* Ensure continue button container has no conflicting styles */}
+            {/* Continue button for multiple choice questions */}
             {question.type === 'multiple' && (
               <div style={{ position: 'relative', zIndex: 10000, clear: 'both' }}>
                 <ContinueButton
@@ -131,16 +109,6 @@ export default function QuestionCard({
           </CardContent>
         </div>
       </Card>
-      
-      {/* Debug info - remove in production */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mt-4 p-4 bg-gray-100 rounded text-xs" style={{ zIndex: 1000 }}>
-          <div>Question: {question.id} ({question.type})</div>
-          <div>Selected: {JSON.stringify(selectedAnswers)}</div>
-          <div>Show button: {question.type === 'multiple' ? 'yes' : 'no'}</div>
-          <div>Button enabled: {selectedAnswers.length > 0 ? 'yes' : 'no'}</div>
-        </div>
-      )}
     </div>
   )
 }
