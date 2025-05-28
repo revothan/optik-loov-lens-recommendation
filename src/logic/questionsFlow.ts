@@ -67,7 +67,7 @@ export const questions: Question[] = [
     options: [
       { id: 'myopia', text: 'Rabun jauh (minus)', value: 'myopia', nextQuestion: 'astigmatism' },
       { id: 'hyperopia', text: 'Rabun dekat (plus)', value: 'hyperopia', nextQuestion: 'astigmatism' },
-      { id: 'presbyopia', text: 'Mata tua (baca dekat sulit)', value: 'presbyopia', nextQuestion: 'astigmatism' },
+      { id: 'presbyopia', text: 'Presbiop', value: 'presbyopia', nextQuestion: 'astigmatism' },
       { id: 'none', text: 'Tidak ada masalah khusus', value: 'none', nextQuestion: 'astigmatism' }
     ]
   },
