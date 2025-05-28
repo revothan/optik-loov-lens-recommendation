@@ -6,8 +6,7 @@ import {
   getDocs, 
   query, 
   where, 
-  deleteDoc,
-  doc
+  deleteDoc
 } from 'firebase/firestore';
 
 // Collection name for storing tokens
