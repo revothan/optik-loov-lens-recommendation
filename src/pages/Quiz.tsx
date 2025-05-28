@@ -21,29 +21,63 @@ export default function Quiz() {
   }, [answers])
 
   const handleAnswer = (answer: string | string[]) => {
+    console.log('=== QUIZ HANDLE ANSWER ===')
+    console.log('Question ID:', currentQuestionId)
+    console.log('Question Type:', currentQuestion?.type)
+    console.log('Answer received:', answer)
+    console.log('Answer type:', typeof answer, Array.isArray(answer) ? 'array' : 'not array')
+    
     const newAnswers = answers.filter(a => a.questionId !== currentQuestionId)
     newAnswers.push({ questionId: currentQuestionId, answer })
     setAnswers(newAnswers)
 
-    // Automatically move to next question for single select
+    console.log('Updated answers:', newAnswers)
+
+    // For single select, move automatically
     if (currentQuestion?.type === 'single') {
+      console.log('Single select - auto advancing')
       handleNext(answer as string)
+    } else {
+      // For multiple select, move to next question
+      console.log('Multiple select - moving to next question')
+      handleNext()
     }
   }
 
-  const handleNext = (answer?: string) => {
+  const handleNext = (answer?: string | string[]) => {
+    console.log('=== HANDLE NEXT ===')
+    console.log('Current question:', currentQuestionId)
+    console.log('Answer parameter:', answer)
+    console.log('Current answer from state:', currentAnswer)
+    
     setIsTransitioning(true)
     
     setTimeout(() => {
-      const answerToUse = answer || (currentAnswer as string)
+      // For multiple choice questions, use the current answer from state
+      // For single choice, use the passed answer
+      let answerToUse: string
+      
+      if (currentQuestion?.type === 'multiple') {
+        // For multiple choice, we need to get the first selected value for navigation logic
+        const multiAnswer = currentAnswer as string[]
+        answerToUse = Array.isArray(multiAnswer) && multiAnswer.length > 0 ? multiAnswer[0] : ''
+        console.log('Using first selected answer for navigation:', answerToUse)
+      } else {
+        answerToUse = answer as string || (currentAnswer as string)
+        console.log('Using single answer for navigation:', answerToUse)
+      }
+      
       const nextQuestionId = getNextQuestion(currentQuestionId, answerToUse)
+      console.log('Next question ID:', nextQuestionId)
       
       if (nextQuestionId) {
         setCurrentQuestionId(nextQuestionId)
         const nextIndex = questions.findIndex(q => q.id === nextQuestionId)
         setCurrentQuestionIndex(nextIndex)
+        console.log('Moving to question:', nextQuestionId, 'at index:', nextIndex)
       } else {
         // Quiz completed, go to results
+        console.log('Quiz completed - navigating to results')
         navigate('/result')
       }
       
@@ -211,6 +245,17 @@ export default function Quiz() {
               </span>
             </div>
           </div>
+          
+          {/* Debug info for development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-8 p-4 bg-red-100 border border-red-300 rounded text-sm">
+              <strong>Quiz Debug Info:</strong><br />
+              Current Question: {currentQuestionId} ({currentQuestion?.type})<br />
+              Current Answer: {JSON.stringify(currentAnswer)}<br />
+              All Answers: {JSON.stringify(answers)}<br />
+              Question Index: {currentQuestionIndex + 1}/{questions.length}
+            </div>
+          )}
         </div>
       </main>
     </div>
