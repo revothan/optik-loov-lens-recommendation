@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { generateRecommendation, QuizAnswer, LensRecommendation } from '@/logic/lensLogic'
-import { ArrowLeft, RefreshCw, Share2, Download, CheckCircle2, Tag, Eye, Sparkles, Trophy, Zap, Brain, Target, Crown, Award } from 'lucide-react'
+
+// Components
+import LoadingScreen from '@/components/result/LoadingScreen'
+import ErrorScreen from '@/components/result/ErrorScreen'
+import AnimatedBackground from '@/components/result/AnimatedBackground'
+import ResultHeader from '@/components/result/ResultHeader'
+import SuccessAnimation from '@/components/result/SuccessAnimation'
+import RecommendationCard from '@/components/result/RecommendationCard'
+import ActionButtons from '@/components/result/ActionButtons'
 
 export default function Result() {
   const navigate = useNavigate()
@@ -12,19 +18,19 @@ export default function Result() {
   const [animationStep, setAnimationStep] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
+  const processingMessages = [
+    'Initializing AI Engine...',
+    'Analyzing your responses...',
+    'Processing neural networks...',
+    'Matching optimal lenses...',
+    'Generating recommendations...'
+  ]
+
   useEffect(() => {
     // Simulate AI processing with steps
-    const processingSteps = [
-      'Initializing AI Engine...',
-      'Analyzing your responses...',
-      'Processing neural networks...',
-      'Matching optimal lenses...',
-      'Generating recommendations...'
-    ]
-
     let step = 0
     const interval = setInterval(() => {
-      if (step < processingSteps.length) {
+      if (step < processingMessages.length) {
         setAnimationStep(step)
         step++
       } else {
@@ -108,7 +114,7 @@ ${recommendations.map((rec, index) =>
    Description: ${rec.description}
    
    Key Features:
-   ${rec.features.map(f => `   • ${f}`).join('\n')}
+   ${rec.features.map(f => `   ➤ ${f}`).join('\n')}
    
    Why recommended:
    ${rec.reasons.map(r => `   ✓ ${r}`).join('\n')}
@@ -136,310 +142,48 @@ Visit us at optikloov.com for professional fitting
     }
   }
 
-  const processingMessages = [
-    'Initializing AI Engine...',
-    'Analyzing your responses...',
-    'Processing neural networks...',
-    'Matching optimal lenses...',
-    'Generating recommendations...'
-  ]
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center relative overflow-hidden">
-        {/* Animated background particles */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full opacity-60 animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="text-center relative z-10">
-          <div className="w-32 h-32 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
-            <Brain className="w-16 h-16 text-white animate-bounce" />
-          </div>
-          
-          <h2 className="text-3xl font-bold text-white mb-4">AI Processing Your Data</h2>
-          
-          <div className="space-y-4 max-w-md mx-auto">
-            {processingMessages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex items-center space-x-3 text-white/80 transition-all duration-500 ${
-                  index <= animationStep ? 'opacity-100 translate-x-0' : 'opacity-30 translate-x-4'
-                }`}
-              >
-                <div className={`w-3 h-3 rounded-full ${
-                  index <= animationStep ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
-                }`} />
-                <span className="text-sm font-medium">{message}</span>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-8">
-            <div className="w-64 h-2 bg-white/20 rounded-full mx-auto overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-1000 ease-out"
-                style={{ width: `${((animationStep + 1) / processingMessages.length) * 100}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <LoadingScreen 
+        animationStep={animationStep} 
+        processingMessages={processingMessages} 
+      />
     )
   }
 
   if (error || recommendations.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Zap className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {error ? 'Processing Error' : 'No Data Found'}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            {error || "We couldn't find your quiz responses. Let's start fresh!"}
-          </p>
-          <Button 
-            onClick={() => navigate('/quiz')} 
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-          >
-            Start AI Consultation
-          </Button>
-        </div>
-      </div>
-    )
+    return <ErrorScreen error={error} />
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce"></div>
-        <div className="absolute top-20 right-20 w-32 h-32 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce" style={{animationDelay: '2s'}}></div>
-      </div>
+      <AnimatedBackground />
 
-      {/* Header */}
-      <header className="relative bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <Button 
-              variant="ghost" 
-              onClick={handleHome}
-              className="group hover:bg-purple-50"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Home
-            </Button>
-            
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Trophy className="w-5 h-5 text-white" />
-              </div>
-              <h1 className="text-xl font-black text-gray-900">AI Results</h1>
-            </div>
-            
-            <div className="flex space-x-2">
-              <Button variant="outline" size="sm" onClick={handleShare} className="group">
-                <Share2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleDownload} className="group">
-                <Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <ResultHeader 
+        onHome={handleHome}
+        onShare={handleShare}
+        onDownload={handleDownload}
+      />
 
-      {/* Success Animation */}
-      <div className="relative pt-12 pb-8">
-        <div className="text-center">
-          <div className="w-24 h-24 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce">
-            <CheckCircle2 className="w-12 h-12 text-white" />
-          </div>
-          
-          <div className="inline-flex items-center space-x-2 bg-emerald-100 rounded-full px-4 py-2 mb-4">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-semibold text-emerald-700">AI Analysis Complete</span>
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
-            Perfect Match <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Found!</span>
-          </h2>
-          
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Our advanced AI has analyzed your unique profile and identified the 
-            <span className="font-semibold text-purple-600"> optimal lens solutions</span> tailored specifically for you.
-          </p>
-        </div>
-      </div>
+      <SuccessAnimation />
 
       {/* Recommendations */}
       <main className="container mx-auto px-4 pb-20">
         <div className="max-w-5xl mx-auto">
           <div className="grid gap-8 mb-12">
             {recommendations.map((rec, index) => (
-              <Card 
-                key={index} 
-                className="group relative overflow-hidden border-0 shadow-2xl bg-white/95 backdrop-blur-xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 opacity-0 animate-pulse"
-                style={{ 
-                  animationDelay: `${index * 200}ms`,
-                  animation: `fadeInUp 0.6s ease-out ${index * 200}ms forwards`
-                }}
-              >
-                {/* Gradient border effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="absolute inset-[1px] bg-white rounded-2xl"></div>
-                
-                <div className="relative">
-                  <CardHeader className="bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-t-2xl">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-2xl flex items-center justify-center shadow-lg text-2xl">
-                          {rec.emoji || '👓'}
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-2 mb-1">
-                            <CardTitle className="text-2xl font-bold">{rec.type}</CardTitle>
-                            {rec.category === 'premium' && (
-                              <div className="flex items-center space-x-1 bg-yellow-500/20 rounded-full px-2 py-1">
-                                <Crown className="w-3 h-3 text-yellow-400" />
-                                <span className="text-xs font-semibold text-yellow-400 uppercase tracking-wider">Premium</span>
-                              </div>
-                            )}
-                            {rec.category === 'standard' && (
-                              <div className="flex items-center space-x-1 bg-blue-500/20 rounded-full px-2 py-1">
-                                <Award className="w-3 h-3 text-blue-400" />
-                                <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">Standard</span>
-                              </div>
-                            )}
-                          </div>
-                          <CardDescription className="text-gray-300 mt-1 text-lg">
-                            {rec.brand}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      
-                      <div className="text-right">
-                        <div className="flex items-center text-gray-300 mb-2">
-                          <Tag className="w-4 h-4 mr-2" />
-                          <span className="text-sm">Recommendation #{index + 1}</span>
-                        </div>
-                        <div className="text-3xl font-black text-emerald-400">{rec.price}</div>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="p-8">
-                    <p className="text-gray-600 text-lg leading-relaxed mb-6">{rec.description}</p>
-
-                    {/* Features Grid */}
-                    <div className="mb-8">
-                      <h4 className="font-bold text-lg mb-4 flex items-center text-gray-900">
-                        <Sparkles className="w-5 h-5 mr-2 text-purple-500" />
-                        Key Features
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {rec.features.map((feature, idx) => (
-                          <div key={idx} className="flex items-start space-x-3 group">
-                            <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full group-hover:scale-150 transition-transform mt-2 flex-shrink-0"></div>
-                            <span className="text-gray-700 font-medium leading-relaxed">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* AI Reasoning */}
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
-                      <h4 className="font-bold text-lg mb-4 flex items-center text-gray-900">
-                        <Brain className="w-5 h-5 mr-2 text-purple-500" />
-                        AI Analysis & Reasoning
-                      </h4>
-                      <div className="space-y-3">
-                        {rec.reasons.map((reason, idx) => (
-                          <div key={idx} className="flex items-start space-x-3">
-                            <Target className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
-                            <span className="text-gray-700 leading-relaxed">{reason}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
+              <RecommendationCard 
+                key={index}
+                recommendation={rec}
+                index={index}
+              />
             ))}
           </div>
 
-          {/* Action Section */}
-          <div className="text-center space-y-8">
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button 
-                size="lg" 
-                onClick={handleNewQuiz}
-                className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8 py-4 shadow-xl hover:shadow-2xl transition-all duration-300"
-              >
-                <RefreshCw className="w-5 h-5 mr-2 group-hover:rotate-180 transition-transform duration-500" />
-                Try Again
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={handleHome}
-                className="text-lg px-8 py-4 hover:bg-purple-50 border-purple-200"
-              >
-                Back to Home
-              </Button>
-            </div>
-            
-            {/* Call to Action */}
-            <Card className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white border-0 shadow-2xl">
-              <CardContent className="p-12 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/10"></div>
-                <div className="relative">
-                  <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Sparkles className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <h3 className="text-3xl font-black mb-4">Ready to Transform Your Vision?</h3>
-                  <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-                    Visit our store for professional fitting and experience the difference 
-                    our AI-recommended lenses can make in your daily life.
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button 
-                      size="lg"
-                      className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-4 font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                    >
-                      🏪 Find Nearest Store
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="lg"
-                      className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4"
-                    >
-                      📞 Book Consultation
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <ActionButtons 
+            onNewQuiz={handleNewQuiz}
+            onHome={handleHome}
+          />
         </div>
       </main>
 
