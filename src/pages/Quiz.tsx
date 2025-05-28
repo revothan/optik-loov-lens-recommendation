@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import QuestionCard from '@/components/QuestionCard'
 import { questions, getNextQuestion, QuizAnswer } from '@/logic/lensLogic'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Brain, Sparkles, Zap } from 'lucide-react'
 
 export default function Quiz() {
   const navigate = useNavigate()
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [currentQuestionId, setCurrentQuestionId] = useState(questions[0].id)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const currentQuestion = questions.find(q => q.id === currentQuestionId)
   const currentAnswer = answers.find(a => a.questionId === currentQuestionId)?.answer
@@ -31,24 +32,35 @@ export default function Quiz() {
   }
 
   const handleNext = (answer?: string) => {
-    const answerToUse = answer || (currentAnswer as string)
-    const nextQuestionId = getNextQuestion(currentQuestionId, answerToUse)
+    setIsTransitioning(true)
     
-    if (nextQuestionId) {
-      setCurrentQuestionId(nextQuestionId)
-      const nextIndex = questions.findIndex(q => q.id === nextQuestionId)
-      setCurrentQuestionIndex(nextIndex)
-    } else {
-      // Quiz completed, go to results
-      navigate('/result')
-    }
+    setTimeout(() => {
+      const answerToUse = answer || (currentAnswer as string)
+      const nextQuestionId = getNextQuestion(currentQuestionId, answerToUse)
+      
+      if (nextQuestionId) {
+        setCurrentQuestionId(nextQuestionId)
+        const nextIndex = questions.findIndex(q => q.id === nextQuestionId)
+        setCurrentQuestionIndex(nextIndex)
+      } else {
+        // Quiz completed, go to results
+        navigate('/result')
+      }
+      
+      setIsTransitioning(false)
+    }, 300)
   }
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      const prevIndex = currentQuestionIndex - 1
-      setCurrentQuestionIndex(prevIndex)
-      setCurrentQuestionId(questions[prevIndex].id)
+      setIsTransitioning(true)
+      
+      setTimeout(() => {
+        const prevIndex = currentQuestionIndex - 1
+        setCurrentQuestionIndex(prevIndex)
+        setCurrentQuestionId(questions[prevIndex].id)
+        setIsTransitioning(false)
+      }, 300)
     }
   }
 
@@ -59,69 +71,151 @@ export default function Quiz() {
   const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100
 
   if (!currentQuestion) {
-    return <div>Loading...</div>
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
+            <Brain className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-lg font-medium text-gray-700">Loading AI Engine...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce animation-delay-0"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce animation-delay-2000"></div>
+        <div className="absolute bottom-32 left-20 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-bounce animation-delay-4000"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="relative bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <Button variant="ghost" onClick={handleHome}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Beranda
+            <Button 
+              variant="ghost" 
+              onClick={handleHome}
+              className="group hover:bg-purple-50 transition-all duration-300"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              <span className="font-medium">Home</span>
             </Button>
-            <h1 className="text-xl font-semibold">Konsultasi Lensa</h1>
-            <div className="text-sm text-muted-foreground">
-              {currentQuestionIndex + 1} dari {questions.length}
+            
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <h1 className="text-xl font-black text-gray-900">AI Consultation</h1>
+            </div>
+            
+            <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full px-4 py-2">
+              <Sparkles className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-bold text-purple-700">
+                {currentQuestionIndex + 1}/{questions.length}
+              </span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Progress Bar */}
-      <div className="bg-white">
+      {/* Modern Progress Bar */}
+      <div className="relative bg-white/60 backdrop-blur-sm">
         <div className="container mx-auto px-4">
-          <div className="w-full bg-gray-200 h-2">
+          <div className="relative h-2 bg-gray-200/50 rounded-full overflow-hidden">
             <div 
-              className="bg-blue-600 h-2 transition-all duration-300 ease-out"
+              className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full transition-all duration-700 ease-out shadow-lg"
               style={{ width: `${progressPercentage}%` }}
-            />
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          
+          {/* Progress indicators */}
+          <div className="flex justify-between mt-2 px-1">
+            {questions.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index <= currentQuestionIndex
+                    ? 'bg-purple-500 scale-125'
+                    : 'bg-gray-300 scale-100'
+                }`}
+              />
+            ))}
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <QuestionCard
-            question={currentQuestion}
-            onAnswer={handleAnswer}
-            currentAnswer={currentAnswer}
-          />
+          {/* AI Status Badge */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex items-center space-x-2 bg-white/90 backdrop-blur-xl rounded-full px-6 py-3 shadow-lg border border-white/20">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <Zap className="w-4 h-4 text-purple-500" />
+              <span className="text-sm font-semibold text-gray-700">AI Engine Active</span>
+            </div>
+          </div>
+
+          {/* Question Card */}
+          <div className={`transition-all duration-500 ${
+            isTransitioning ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'
+          }`}>
+            <QuestionCard
+              question={currentQuestion}
+              onAnswer={handleAnswer}
+              currentAnswer={currentAnswer}
+              questionNumber={currentQuestionIndex + 1}
+              totalQuestions={questions.length}
+            />
+          </div>
 
           {/* Navigation */}
-          <div className="flex justify-between mt-8 max-w-2xl mx-auto">
+          <div className="flex justify-between items-center mt-12 max-w-3xl mx-auto">
             <Button
               variant="outline"
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
-              className="flex items-center"
+              className="group flex items-center space-x-2 px-6 py-3 bg-white/80 backdrop-blur-xl border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Sebelumnya
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="font-medium">Previous</span>
             </Button>
+
+            {/* Center info */}
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <Brain className="w-4 h-4" />
+              <span>AI analyzing your preferences...</span>
+            </div>
 
             {currentQuestion.type === 'multiple' && currentAnswer && (
               <Button
                 onClick={() => handleNext()}
-                className="flex items-center"
+                className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Selanjutnya
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <span className="font-medium">Continue</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             )}
+            
+            {currentQuestion.type === 'single' && (
+              <div className="w-24"></div> // Spacer for layout balance
+            )}
+          </div>
+
+          {/* Fun facts or tips */}
+          <div className="mt-16 text-center">
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full px-6 py-3 border border-blue-100">
+              <Sparkles className="w-4 h-4 text-blue-500" />
+              <span className="text-sm text-gray-600">
+                💡 <strong>Did you know?</strong> Our AI processes over 1000+ lens parameters to find your perfect match
+              </span>
+            </div>
           </div>
         </div>
       </main>
